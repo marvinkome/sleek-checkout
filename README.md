@@ -1,1 +1,1 @@
-# Sleek Payments
+# Sleek Checkout
