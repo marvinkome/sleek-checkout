@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Demo page of the widget</title>
+  </head>
+
+  <body>
+    <h1>Help Widget Demo</h1>
+    <h2>The shown widget is for demonstration purpose only</h2>
+
+    <p>The following snippet is embedded on this page and allows to render a widget shown on the right bottom corner:</p>
+
+    <p>To trigger the widget click this button</p>
+
+    <p>Below is a text that doesn't make sense at all.</p>
+    <p>
+      Orci purus ante excepteur nunc nascetur rhoncus taciti ut. Ornare vitae sed. Amet suspendisse integer rutrum aliquet venenatis. Nec
+      sed nullam mauris magna vel pretium non tristique. Porta justo ac dictumst aliquip blandit. Libero nec eu dolor eget volutpat. Magna
+      nulla neque. Fames tempus lorem duis orci ipsum.
+    </p>
+    <p>
+      Orci purus ante excepteur nunc nascetur rhoncus taciti ut. Ornare vitae sed. Amet suspendisse integer rutrum aliquet venenatis. Nec
+      sed nullam mauris magna vel pretium non tristique. Porta justo ac dictumst aliquip blandit. Libero nec eu dolor eget volutpat. Magna
+      nulla neque. Fames tempus lorem duis orci ipsum.
+    </p>
+    <p>
+      Orci purus ante excepteur nunc nascetur rhoncus taciti ut. Ornare vitae sed. Amet suspendisse integer rutrum aliquet venenatis. Nec
+      sed nullam mauris magna vel pretium non tristique. Porta justo ac dictumst aliquip blandit. Libero nec eu dolor eget volutpat. Magna
+      nulla neque. Fames tempus lorem duis orci ipsum.
+    </p>
+    <p>
+      Orci purus ante excepteur nunc nascetur rhoncus taciti ut. Ornare vitae sed. Amet suspendisse integer rutrum aliquet venenatis. Nec
+      sed nullam mauris magna vel pretium non tristique. Porta justo ac dictumst aliquip blandit. Libero nec eu dolor eget volutpat. Magna
+      nulla neque. Fames tempus lorem duis orci ipsum.
+    </p>
+
+    <script src="./widget.js" async></script>
+    <script>
+      window.onload = () => {
+        SleekCheckout({
+          amount: "1.5",
+          recipientAddress: "0xb63F27E0E5A4c463e056DC835821f0BEE339406A",
+          onClose: () => {
+            console.log("Should be called");
+          },
+        });
+      };
+    </script>
+  </body>
+</html>
