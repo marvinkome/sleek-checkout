@@ -7,17 +7,13 @@ import css from "rollup-plugin-import-css";
 import alias from "@rollup/plugin-alias";
 import commonjs from "@rollup/plugin-commonjs";
 import nodePolyfills from "rollup-plugin-polyfill-node";
+import gzipPlugin from "rollup-plugin-gzip";
 
 export default {
   input: "./src/index.tsx",
   output: [
     {
-      file: "./build/sleek.js",
-      format: "umd",
-      name: "SleekPay",
-    },
-    {
-      file: "./build/sleek.min.js",
+      file: "./dist/sleek.min.js",
       format: "iife",
       name: "SleekPay",
       plugins: [terser()],
@@ -39,7 +35,8 @@ export default {
     resolve({ preferBuiltins: false }),
     commonjs(),
     nodePolyfills(),
-    visualizer({ open: true }),
+    gzipPlugin(),
+    visualizer({ open: true, gzipSize: true }),
   ],
 
   inlineDynamicImports: true,
