@@ -1,4 +1,5 @@
-import { h, Fragment } from "preact";
+import { h } from "preact";
+import { IoIosCheckmarkCircle } from "@react-icons/all-files/io/IoIosCheckmarkCircle";
 import { useEffect, useState, useCallback } from "preact/hooks";
 import { useWeb3React } from "@web3-react/core";
 import { parseUnits } from "@ethersproject/units";
@@ -64,45 +65,83 @@ function ConfirmPayment({ selectedToken }: any) {
   const renderBody = () => {
     switch (view) {
       case "checking-balance": {
-        return <p>Checking balance</p>;
+        return (
+          <div class="w-full flex flex-col items-center justify-center py-10">
+            <div class="loader" />
+            <p class="text-sm mt-3">Checking balance...</p>
+          </div>
+        );
       }
       case "not-enough-balance": {
         return (
-          <Fragment>
-            <p>Not enough balance to make this payment, try again with a different token</p>
-            <br />
-            <button onClick={() => goBack()}>Select different token</button>
-          </Fragment>
+          <div class="w-full flex flex-col items-center justify-center py-6">
+            <p class="text-sm text-center mb-5">Not enough balance to make this payment, try again with a different token</p>
+            <button class="btn" onClick={() => goBack()}>
+              Select different token
+            </button>
+          </div>
         );
       }
       case "confirm-payment": {
         return (
-          <Fragment>
-            <p>You pay:</p>
+          <div class="w-full flex flex-col pt-2">
+            <p class="text-sm mb-1">You pay:</p>
+
             {/* TODO: Perform token price conversion */}
-            <h5>
+            <h5 class="font-semibold text-xl mb-3">
               {amount} {selectedToken.toUpperCase()}
             </h5>
-            <p>You will receive 2 prompts from your wallet to approve and pay for this transaction.</p>
-            <br />
-            <button onClick={() => confirmPayment()}>Confirm payment</button>
-          </Fragment>
+
+            <p class="text-sm text-gray-600 mb-5">You will receive 2 prompts from your wallet to approve and pay for this transaction.</p>
+
+            <button class="btn" onClick={() => confirmPayment()}>
+              Confirm payment
+            </button>
+          </div>
         );
       }
       case "approving-tx": {
-        return <p>Approving transaction...</p>;
+        return (
+          <div class="w-full flex flex-col items-center justify-center py-10 px-8">
+            <div class="loader" />
+
+            <div class="mt-5 text-center">
+              <h5 class="font-bold text-xl">Hang Tight!</h5>
+              <p class="text-sm mt-3">
+                We're approving your wallet to spend {amount} {selectedToken.toUpperCase()}
+              </p>
+            </div>
+          </div>
+        );
       }
       case "making-payment": {
-        return <p>Making payment...</p>;
+        return (
+          <div class="w-full flex flex-col items-center justify-center py-10 px-8">
+            <div class="loader" />
+
+            <div class="mt-5 text-center">
+              <h5 class="font-bold text-xl">Hang Tight!</h5>
+              <p class="text-sm mt-3">Making payment now...</p>
+            </div>
+          </div>
+        );
       }
       case "payment-done": {
         return (
-          <Fragment>
-            <h5>Payment confirmed</h5>
-            <a href={`${getBlockExplorer(chainId!)}tx/${transaction?.hash}`}>View receipt</a>
-            <br />
-            <button onClick={() => onSuccess!(transaction)}>Done</button>
-          </Fragment>
+          <div class="w-full flex flex-col items-center justify-center pt-10">
+            <IoIosCheckmarkCircle className="text-5xl text-emerald-500" />
+
+            <div class="my-5 text-center">
+              <h5 class="font-semibold text-lg">Payment Successful!</h5>
+              <a class="text-sm underline" target="_blank" href={`${getBlockExplorer(chainId!)}tx/${transaction?.hash}`}>
+                View receipt
+              </a>
+            </div>
+
+            <button class="btn" onClick={() => onSuccess!(transaction)}>
+              Done
+            </button>
+          </div>
         );
       }
       default:
@@ -110,14 +149,7 @@ function ConfirmPayment({ selectedToken }: any) {
     }
   };
 
-  return (
-    <div>
-      <p>Confirm payment here</p>
-      <br />
-
-      {renderBody()}
-    </div>
-  );
+  return <div>{renderBody()}</div>;
 }
 
 export default ConfirmPayment;

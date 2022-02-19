@@ -1,5 +1,5 @@
 import { h, createContext } from "preact";
-import { useContext } from "preact/hooks";
+import { useContext, useErrorBoundary } from "preact/hooks";
 
 const ConfigContext = createContext<{
   amount?: string;
@@ -46,5 +46,6 @@ export function ConfigProvider({ config, ...props }: any) {
     },
   };
 
+  useErrorBoundary((e) => value.onError(e));
   return <ConfigContext.Provider value={value}>{props.children}</ConfigContext.Provider>;
 }

@@ -15,9 +15,14 @@ module.exports = (env) => {
       entry: "./src/index.tsx",
 
       output: {
-        filename: "sleek-checkout.js",
+        clean: true,
+        filename: "sleek.js",
         path: path.resolve(bundleOutputDir),
-        library: "SleekCheckout",
+        library: {
+          name: "SleekPay",
+          type: "var",
+          export: "default",
+        },
       },
 
       devServer: {
@@ -72,19 +77,17 @@ module.exports = (env) => {
             use: [
               {
                 loader: "style-loader",
-                options: { injectType: "singletonStyleTag" },
-              },
-              {
-                // allows import CSS as modules
-                loader: "css-loader",
                 options: {
-                  modules: {
-                    // css class names format
-                    localIdentName: "[name]-[local]-[hash:base64:5]",
+                  injectType: "lazyStyleTag",
+                  insert: function insertIntoTarget(element, options) {
+                    let parent = options.target || document.head;
+
+                    parent.appendChild(element);
                   },
-                  sourceMap: isDevBuild,
                 },
               },
+              "css-loader",
+              "postcss-loader",
             ],
           },
           // use babel-loader for TS and JS modeles,

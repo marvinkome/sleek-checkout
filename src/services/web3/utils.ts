@@ -25,8 +25,8 @@ export async function activateConnector(activateFn: any, connector: any) {
     await activateFn(connector, undefined, true);
   } catch (err) {
     if (err instanceof UnsupportedChainIdError) {
-      const group = err.message.match(/\d+\,/g);
-      const chainID = (group || [""])[0].replace(",", "");
+      const group = err.message.match(/\d+/g);
+      const chainID = (group || [""])[1];
 
       await switchNetwork(chainID);
       await activateFn(connector, undefined, true);

@@ -35,12 +35,18 @@
       nulla neque. Fames tempus lorem duis orci ipsum.
     </p>
 
-    <script src="./widget.js" async></script>
+    <script src="./sleek-checkout.js" async></script>
     <script>
       window.onload = () => {
-        SleekCheckout({
-          amount: "1.5",
+        SleekPay({
+          amount: "150",
           recipientAddress: "0xb63F27E0E5A4c463e056DC835821f0BEE339406A",
+          onSuccess: (tx) => {
+            console.log(tx);
+          },
+          onError: (e) => {
+            console.debug(error);
+          },
           onClose: () => {
             console.log("Should be called");
           },
