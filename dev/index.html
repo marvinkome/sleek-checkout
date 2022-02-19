@@ -39,13 +39,14 @@
     <script>
       window.onload = () => {
         SleekPay({
-          amount: "150",
+          amount: "1.50",
           recipientAddress: "0xb63F27E0E5A4c463e056DC835821f0BEE339406A",
           onSuccess: (tx) => {
             console.log(tx);
           },
           onError: (e) => {
-            console.debug(error);
+            console.log("Error handler from html", e);
+            console.debug(e);
           },
           onClose: () => {
             console.log("Should be called");

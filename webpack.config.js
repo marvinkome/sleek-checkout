@@ -32,6 +32,10 @@ module.exports = (env) => {
       },
 
       plugins: [
+        new webpack.DefinePlugin({
+          __DEV__: process.env.NODE_ENV !== "production",
+        }),
+
         new webpack.ProvidePlugin({
           process: "process/browser",
           Buffer: ["buffer", "Buffer"],

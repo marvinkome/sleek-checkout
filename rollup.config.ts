@@ -1,4 +1,5 @@
 import { terser } from "rollup-plugin-terser";
+import { visualizer } from "rollup-plugin-visualizer";
 import resolve from "@rollup/plugin-node-resolve";
 import typescript from "@rollup/plugin-typescript";
 import json from "@rollup/plugin-json";
@@ -38,6 +39,7 @@ export default {
     resolve({ preferBuiltins: false }),
     commonjs(),
     nodePolyfills(),
+    visualizer({ open: true }),
   ],
 
   inlineDynamicImports: true,

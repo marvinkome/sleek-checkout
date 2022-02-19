@@ -16,7 +16,7 @@ export function useConfig() {
 export function ConfigProvider({ config, ...props }: any) {
   const cleanup = () => {
     // remove walletconnect from localstorage
-    localStorage.removeItem("custom-wc");
+    localStorage.removeItem("sleek-wc");
   };
 
   const value = {
@@ -46,6 +46,10 @@ export function ConfigProvider({ config, ...props }: any) {
     },
   };
 
-  useErrorBoundary((e) => value.onError(e));
+  const [error] = useErrorBoundary((e) => {
+    value.onError(e);
+  });
+
+  if (error) return null;
   return <ConfigContext.Provider value={value}>{props.children}</ConfigContext.Provider>;
 }

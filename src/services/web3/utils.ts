@@ -4,7 +4,7 @@ import { isAddress } from "@ethersproject/address";
 import { AddressZero } from "@ethersproject/constants";
 import { ACCEPTED_TOKENS } from "./constants";
 
-export async function switchNetwork(chainId: string) {
+export async function switchNetwork(chainId: number) {
   const { ethereum } = global as any;
   if (!ethereum) {
     console.log("MetaMask extension not available");
@@ -17,18 +17,18 @@ export async function switchNetwork(chainId: string) {
   });
 }
 
-export async function activateConnector(activateFn: any, connector: any) {
+export async function activateConnector(activateFn: any, connector: any, chainId: number) {
   if (!activateFn) throw Error("no activation function passed");
   if (!connector) return;
 
   try {
+    // remove wallet connect from storage
+    localStorage.removeItem("sleek-wc");
     await activateFn(connector, undefined, true);
   } catch (err) {
     if (err instanceof UnsupportedChainIdError) {
-      const group = err.message.match(/\d+/g);
-      const chainID = (group || [""])[1];
-
-      await switchNetwork(chainID);
+      console.log("Trying to switch network");
+      await switchNetwork(chainId);
       await activateFn(connector, undefined, true);
     } else {
       throw err;

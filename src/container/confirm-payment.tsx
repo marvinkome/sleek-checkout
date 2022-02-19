@@ -3,7 +3,6 @@ import { IoIosCheckmarkCircle } from "@react-icons/all-files/io/IoIosCheckmarkCi
 import { useEffect, useState, useCallback } from "preact/hooks";
 import { useWeb3React } from "@web3-react/core";
 import { parseUnits } from "@ethersproject/units";
-import { BigNumber } from "bignumber.js";
 import { useErc20, usePaymentContract } from "../hooks/web3";
 import { useConfig } from "../services/config";
 import { useRouter } from "../services/router";
@@ -25,9 +24,9 @@ function ConfirmPayment({ selectedToken }: any) {
   const checkBalance = useCallback(async () => {
     try {
       const token = getToken(selectedToken, chainId!);
-      const balance = new BigNumber((await erc20.balanceOf(account)).toString()).dividedBy(`1e${token.decimals}`);
+      const balance = await erc20.balanceOf(account);
 
-      const hasEnoughBalance = balance.isGreaterThanOrEqualTo(amount || "0");
+      const hasEnoughBalance = balance.gte(parseUnits(amount || "0", token.decimals));
       setView(hasEnoughBalance ? "confirm-payment" : "not-enough-balance");
     } catch (e) {
       setView("not-enough-balance");
@@ -58,6 +57,7 @@ function ConfirmPayment({ selectedToken }: any) {
       setView("payment-done");
       setTransaction(tx);
     } catch (err) {
+      // show errors in UI
       onError && onError(err);
     }
   };

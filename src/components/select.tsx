@@ -4,7 +4,7 @@ import { IoIosCheckmarkCircle } from "@react-icons/all-files/io/IoIosCheckmarkCi
 
 type SelectProps = {
   selected?: string;
-  options?: ({ name: string; label: string; image: string; onSelect: (value: string) => void } | null)[];
+  options?: ({ name: string | number; label: string; image: string; onSelect: (value: string | number) => void } | null)[];
 };
 export const Select = ({ selected, options }: SelectProps) => {
   return (
@@ -45,7 +45,7 @@ export const Select = ({ selected, options }: SelectProps) => {
             onClick={() => option?.onSelect(option?.name)}
           >
             <span class="flex items-center">
-              <img src={option?.image} alt={option?.name} className="flex-shrink-0 h-6 w-6 rounded-full" />
+              <img src={option?.image} alt={option?.label} className="flex-shrink-0 h-6 w-6 rounded-full" />
               <span className="ml-3 block truncate font-semibold">{option?.label}</span>
             </span>
 

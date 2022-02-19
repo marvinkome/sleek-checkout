@@ -1,13 +1,13 @@
 import { h } from "preact";
 import { useEffect, useState } from "preact/hooks";
-import { useWeb3React } from "@web3-react/core";
+import { UnsupportedChainIdError, useWeb3React } from "@web3-react/core";
 import { useRouter } from "../services/router";
 import { SUPPORTED_WALLETS } from "../services/web3/connectors";
 import { activateConnector } from "../services/web3/utils";
 import { Select } from "../components/select";
 
-function ConnectWallet() {
-  const [error, setError] = useState(false);
+function ConnectWallet({ chainId }: any) {
+  const [error, setError] = useState<string | null>(null);
   const { goForward } = useRouter();
   const { account, activate } = useWeb3React();
 
@@ -18,40 +18,30 @@ function ConnectWallet() {
   }, [account]);
 
   const onSelect = async (value: string) => {
-    const connector: any = Object.entries(SUPPORTED_WALLETS).find(([k]) => k === value);
-    if (!connector) return;
+    const walletKey = Object.keys(SUPPORTED_WALLETS).find((key) => key === value);
+    if (!walletKey) return;
+
+    const wallet = SUPPORTED_WALLETS[walletKey];
+    if (!wallet) return;
+
+    const connector = wallet.connector(chainId);
 
     try {
-      await activateConnector(activate, connector[1].connector);
-      setError(false);
+      setError(null);
+      await activateConnector(activate, connector, chainId);
     } catch (e) {
-      console.error("SleekCheck: Error connecting wallet", e);
-      setError(true);
+      if (e instanceof UnsupportedChainIdError) {
+        return setError("unsupported-chain");
+      }
+
+      console.error("SleekCheckout: Error connecting wallet", e);
+      setError("general-error");
     }
   };
 
   const options = Object.keys(SUPPORTED_WALLETS)
     .map((walletKey) => {
-      // @ts-ignore
-      const isMetamask = window.ethereum && window.ethereum.isMetaMask;
       const wallet = SUPPORTED_WALLETS[walletKey];
-
-      if (wallet.name === "Injected") {
-        // @ts-ignore
-        if (!(window.web3 || window.ethereum)) {
-          return null;
-        }
-
-        // don't return metamask if injected provider isn't metamask
-        else if (wallet.name === "MetaMask" && !isMetamask) {
-          return null;
-        }
-
-        // likewise for generic
-        else if (wallet.name === "Injected" && isMetamask) {
-          return null;
-        }
-      }
 
       return {
         name: walletKey,
@@ -62,13 +52,23 @@ function ConnectWallet() {
     })
     .filter(Boolean);
 
+  const renderError = () => {
+    switch (error) {
+      case "unsupported-chain":
+        // todo: add link to doc on supported chains
+        return "Error connecting wallet, please select a different network.";
+      default:
+        return "Error connecting wallet, please try again with a different option.";
+    }
+  };
+
   return (
     <div>
       <h4 class="block text-sm mb-3">Select wallet to continue</h4>
 
       <Select options={options} />
 
-      {error && <p class="text-sm mt-5 text-red-700">Error connecting wallet, please try again with a different option</p>}
+      {error && <p class="text-sm mt-5 text-red-700">{renderError()}</p>}
     </div>
   );
 }
