@@ -1,12 +1,13 @@
 {
   "compilerOptions": {
-    "module": "commonjs",
+    "module": "esnext",
     "target": "es6",
     "lib": ["es6", "dom"],
     "moduleResolution": "node",
     "rootDir": "./",
     "sourceMap": true,
     "allowJs": false,
+    "esModuleInterop": true,
     "resolveJsonModule": true,
     "noImplicitAny": true,
     "noUnusedLocals": true,

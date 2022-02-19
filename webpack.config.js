@@ -20,7 +20,7 @@ module.exports = (env) => {
         path: path.resolve(bundleOutputDir),
         library: {
           name: "SleekPay",
-          type: "var",
+          type: "umd",
           export: "default",
         },
       },
