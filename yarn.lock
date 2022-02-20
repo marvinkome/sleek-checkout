@@ -8459,6 +8459,15 @@ ltgt@~2.2.0:
   resolved "https://registry.yarnpkg.com/ltgt/-/ltgt-2.2.1.tgz#f35ca91c493f7b73da0e07495304f17b31f87ee5"
   integrity sha1-81ypHEk/e3PaDgdJUwTxezH4fuU=
 
+magic-comments-loader@^1.4.1:
+  version "1.4.1"
+  resolved "https://registry.yarnpkg.com/magic-comments-loader/-/magic-comments-loader-1.4.1.tgz#d54c88f0b96418e19a7695c978960c3b8be5a142"
+  integrity sha512-5Kh0NkWO40o35sCNJ3NqlDBVop449giCaLJwBZmX32UJADKCcDBnI7MjmlBfjtbBhhnRlMFU5CebqWDfFYyg8Q==
+  dependencies:
+    loader-utils "^2.0.0"
+    micromatch "^4.0.4"
+    schema-utils "^3.1.1"
+
 magic-string@^0.25.0, magic-string@^0.25.7:
   version "0.25.7"
   resolved "https://registry.yarnpkg.com/magic-string/-/magic-string-0.25.7.tgz#3f497d6fd34c669c6798dcb821f2ef31f5445051"
