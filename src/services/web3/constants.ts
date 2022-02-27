@@ -5,14 +5,14 @@ export const ACCEPTED_TOKENS = {
   usdc: (chainId: number) => {
     const addresses = {
       137: {
-        address: "",
+        address: "0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174",
         icon: "https://cryptologos.cc/logos/usd-coin-usdc-logo.svg?v=021",
-        decimals: 0,
+        decimals: 6,
       },
       56: {
-        address: "",
+        address: "0x8AC76a51cc950d9822D68b83fE1Ad97B32Cd580d",
         icon: "https://cryptologos.cc/logos/usd-coin-usdc-logo.svg?v=021",
-        decimals: 0,
+        decimals: 18,
       },
     };
 
@@ -30,14 +30,14 @@ export const ACCEPTED_TOKENS = {
   usdt: (chainId: number) => {
     const addresses = {
       137: {
-        address: "",
+        address: "0xc2132D05D31c914a87C6611C10748AEb04B58e8F",
         icon: "https://cryptologos.cc/logos/tether-usdt-logo.svg?v=021",
-        decimals: 0,
+        decimals: 6,
       },
       56: {
-        address: "",
+        address: "0x55d398326f99059fF775485246999027B3197955",
         icon: "https://cryptologos.cc/logos/tether-usdt-logo.svg?v=021",
-        decimals: 0,
+        decimals: 18,
       },
     };
 
@@ -55,14 +55,14 @@ export const ACCEPTED_TOKENS = {
   dai: (chainId: number) => {
     const addresses = {
       137: {
-        address: "",
+        address: "0x8f3Cf7ad23Cd3CaDbD9735AFf958023239c6A063",
         icon: "https://cryptologos.cc/logos/multi-collateral-dai-dai-logo.svg?v=021",
-        decimals: 0,
+        decimals: 18,
       },
       56: {
-        address: "",
+        address: "0x1AF3F329e8BE154074D8769D1FFa4eE058B1DBc3",
         icon: "https://cryptologos.cc/logos/multi-collateral-dai-dai-logo.svg?v=021",
-        decimals: 0,
+        decimals: 18,
       },
     };
 
