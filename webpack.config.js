@@ -2,7 +2,7 @@ const path = require("path");
 const webpack = require("webpack");
 const copyWebpackPlugin = require("copy-webpack-plugin");
 const TerserPlugin = require("terser-webpack-plugin");
-const BundleAnalyzerPlugin = require("webpack-bundle-analyzer").BundleAnalyzerPlugin;
+// const BundleAnalyzerPlugin = require("webpack-bundle-analyzer").BundleAnalyzerPlugin;
 const CompressionPlugin = require("compression-webpack-plugin");
 
 const bundleOutputDir = "./dist";
@@ -45,7 +45,9 @@ module.exports = (env) => {
 
         ...(isDevBuild
           ? [new webpack.SourceMapDevToolPlugin(), new copyWebpackPlugin({ patterns: [{ from: "dev/" }] })]
-          : [new BundleAnalyzerPlugin()]),
+          : [
+              // new BundleAnalyzerPlugin()
+            ]),
       ],
 
       optimization: {
