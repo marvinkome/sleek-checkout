@@ -4,11 +4,6 @@ export const isDev = !!__DEV__;
 export const ACCEPTED_TOKENS = {
   usdc: (chainId: number) => {
     const addresses = {
-      1: {
-        address: "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
-        icon: "https://cryptologos.cc/logos/usd-coin-usdc-logo.svg?v=021",
-        decimals: 6,
-      },
       137: {
         address: "",
         icon: "https://cryptologos.cc/logos/usd-coin-usdc-logo.svg?v=021",
@@ -34,12 +29,6 @@ export const ACCEPTED_TOKENS = {
 
   usdt: (chainId: number) => {
     const addresses = {
-      1: {
-        address: "0xdac17f958d2ee523a2206206994597c13d831ec7",
-        icon: "https://cryptologos.cc/logos/tether-usdt-logo.svg?v=021",
-        decimals: 6,
-      },
-
       137: {
         address: "",
         icon: "https://cryptologos.cc/logos/tether-usdt-logo.svg?v=021",
@@ -65,12 +54,6 @@ export const ACCEPTED_TOKENS = {
 
   dai: (chainId: number) => {
     const addresses = {
-      1: {
-        address: "0x6b175474e89094c44da98b954eedeac495271d0f",
-        icon: "https://cryptologos.cc/logos/multi-collateral-dai-dai-logo.svg?v=021",
-        decimals: 18,
-      },
-
       137: {
         address: "",
         icon: "https://cryptologos.cc/logos/multi-collateral-dai-dai-logo.svg?v=021",
@@ -96,14 +79,6 @@ export const ACCEPTED_TOKENS = {
 };
 
 export const SUPPORTED_CHAINS = [
-  {
-    name: "Ethereum",
-    chainId: 1,
-    logo: "https://cryptologos.cc/logos/ethereum-eth-logo.svg?v=021",
-    explorer: "https://etherscan.io/",
-    rpcUrl: "https://mainnet.infura.io/v3/5943db108ab24508875f5d1cedb61636",
-  },
-
   isDev
     ? {
         name: "Rinkeby",
@@ -111,6 +86,7 @@ export const SUPPORTED_CHAINS = [
         logo: "https://cryptologos.cc/logos/ethereum-eth-logo.svg?v=021",
         explorer: "https://rinkeby.etherscan.io/",
         rpcUrl: "https://rinkeby.infura.io/v3/5943db108ab24508875f5d1cedb61636",
+        coingeckoId: `ethereum`,
       }
     : null,
   {
@@ -119,6 +95,7 @@ export const SUPPORTED_CHAINS = [
     logo: "https://cryptologos.cc/logos/bnb-bnb-logo.svg?v=021",
     explorer: "https://bscscan.com/",
     rpcUrl: "https://bsc-dataseed.binance.org/",
+    coingeckoId: `binance-smart-chain`,
   },
 
   {
@@ -127,19 +104,18 @@ export const SUPPORTED_CHAINS = [
     logo: "https://cryptologos.cc/logos/polygon-matic-logo.svg?v=021",
     explorer: "https://polygonscan.com/",
     rpcUrl: "https://polygon-rpc.com/",
+    coingeckoId: `polygon-pos`,
   },
 ].filter(Boolean);
 
 export const getPaymentContractAddress = (chainId: number) => {
   switch (chainId) {
-    case 1:
-      return "";
     case 4:
-      return "0x5992752154e63Cd8368AE00eCcDB286E53f271C1";
+      return "0x5BDDe37055a5f34619fC6F2A7535D2c86f5Cf9d6";
     case 137:
-      return "";
+      return "0xB3d5e6B2bCaA6B20E0D8C62d8E85c85bd0d48aCA";
     case 56:
-      return "";
+      return "0x1DDbEC9CC97704F7A142BAFD225fB63146aEd10A";
     default:
       throw Error("Chain ID not supported");
   }

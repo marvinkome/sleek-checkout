@@ -145,15 +145,17 @@ module.exports = (env) => {
               },
             ],
           },
-          {
-            test: /\.(js|ts|tsx)$/,
-            use: [
-              {
-                loader: "magic-comments-loader",
-                options: { webpackMode: "eager" },
-              },
-            ],
-          },
+          !isDevBuild
+            ? {
+                test: /\.(js|ts|tsx)$/,
+                use: [
+                  {
+                    loader: "magic-comments-loader",
+                    options: { webpackMode: "eager" },
+                  },
+                ],
+              }
+            : {},
         ],
       },
     },

@@ -6,7 +6,7 @@ import { App } from "./App";
 // @ts-ignore
 import style from "./index.css";
 
-// main entry point - calls loader and render app into element
+// main entry point
 export default function SleekPay(options: any) {
   // initialize functiions here
   options.debug && console.log(`Initiazlizing SleekCheckout with options: `, options);
@@ -25,6 +25,13 @@ export default function SleekPay(options: any) {
   const targetElement = wrappingElement.appendChild(window.document.createElement("section"));
   targetElement.setAttribute("id", "SleekCheckout");
 
+  // add font to main DOM
+  var linkNode = document.createElement("link");
+  linkNode.type = "text/css";
+  linkNode.rel = "stylesheet";
+  linkNode.href = "https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap";
+  document.head.appendChild(linkNode);
+
   const config = {
     amount: options.amount,
     recipientAddress: options.recipientAddress,
@@ -33,6 +40,7 @@ export default function SleekPay(options: any) {
     onClose: (...args: any[]) => {
       style.unuse();
       targetElement.remove();
+      linkNode.remove();
       options.onClose && options.onClose(...args);
     },
   };

@@ -9,7 +9,7 @@ export const SUPPORTED_WALLETS = {
         supportedChainIds: [chainId],
       }),
     name: "Metamask",
-    label: "Connect with MetaMask",
+    label: "MetaMask",
     iconUrl: "https://docs.metamask.io/metamask-fox.svg",
   },
 
@@ -27,6 +27,6 @@ export const SUPPORTED_WALLETS = {
     name: "Wallet Connect",
     iconUrl:
       "https://raw.githubusercontent.com/WalletConnect/walletconnect-assets/492d95c038bbcde1517cab5fb90ed4514690e919/svg/original/walletconnect-logo.svg",
-    label: "Connect with Wallet Connect",
+    label: "Wallet Connect",
   },
 };

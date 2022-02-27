@@ -2,3 +2,4 @@ node_modules
 /build
 /*.log
 stats.html
+.DS_Store

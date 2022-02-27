@@ -2,7 +2,7 @@ import { UnsupportedChainIdError } from "@web3-react/core";
 import { Web3Provider } from "@ethersproject/providers";
 import { isAddress } from "@ethersproject/address";
 import { AddressZero } from "@ethersproject/constants";
-import { ACCEPTED_TOKENS } from "./constants";
+import { ACCEPTED_TOKENS, SUPPORTED_CHAINS } from "./constants";
 
 export async function switchNetwork(chainId: number) {
   const { ethereum } = global as any;
@@ -55,4 +55,25 @@ export function getToken(tokenName: string, chainId: number) {
   }
 
   return token;
+}
+
+export async function getTokenAmount(tokenName: string, chainId: number, amount: string) {
+  const token = getToken(tokenName, chainId);
+  const chain = SUPPORTED_CHAINS.find((k) => k?.chainId === chainId);
+
+  let price = "1";
+  if (!chain) return price;
+
+  try {
+    const resp = await fetch(
+      `https://api.coingecko.com/api/v3/simple/token_price/${chain.coingeckoId}?contract_addresses=${token.address}&vs_currencies=usd`
+    );
+
+    const data = await resp.json();
+    price = data[token.address.toLowerCase()].usd || "1";
+  } catch (err) {
+    price = "1";
+  }
+
+  return `${(parseFloat(amount) / parseFloat(price)).toFixed(2)}`;
 }

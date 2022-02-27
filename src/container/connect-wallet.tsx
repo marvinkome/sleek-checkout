@@ -1,10 +1,10 @@
 import { h } from "preact";
+import clx from "classnames";
 import { useEffect, useState } from "preact/hooks";
 import { UnsupportedChainIdError, useWeb3React } from "@web3-react/core";
 import { useRouter } from "../services/router";
 import { SUPPORTED_WALLETS } from "../services/web3/connectors";
 import { activateConnector } from "../services/web3/utils";
-import { Select } from "../components/select";
 
 function ConnectWallet({ chainId }: any) {
   const [error, setError] = useState<string | null>(null);
@@ -63,13 +63,49 @@ function ConnectWallet({ chainId }: any) {
   };
 
   return (
-    <div>
-      <h4 class="block text-sm mb-3">Select wallet to continue</h4>
+    <main class="mb-auto flex flex-col justify-center py-6 px-6">
+      <h4 class="block mb-5 text-center font-medium">Connect your wallet</h4>
 
-      <Select options={options} />
+      <div>
+        {options?.map((option) => (
+          <div class="relative mb-4" key={option?.name}>
+            <button
+              type="button"
+              class={clx([
+                "relative",
+                "w-full",
+                "bg-white",
+                "border",
+                "border-gray-300",
+                "rounded-md",
+                "shadow-sm",
+                "px-10",
+                "py-6",
+                "text-left",
+                "cursor-pointer",
+                "focus:outline-none",
+                "focus:ring-1",
+                "focus:ring-gray-500",
+                "focus:border-gray-500",
+                "hover:border-gray-500",
+                "sm:text-sm",
+              ])}
+              aria-haspopup="listbox"
+              aria-expanded="true"
+              aria-labelledby="listbox-label"
+              onClick={() => option?.onSelect(option?.name)}
+            >
+              <span class="flex flex-col justify-center items-center">
+                <img src={option?.image} alt={option?.label} className="flex-shrink-0 h-6 w-6 rounded-full mb-3" />
+                <span className="block truncate">{option?.label}</span>
+              </span>
+            </button>
+          </div>
+        ))}
+      </div>
 
       {error && <p class="text-sm mt-5 text-red-700">{renderError()}</p>}
-    </div>
+    </main>
   );
 }
 

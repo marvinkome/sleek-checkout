@@ -1,12 +1,10 @@
-@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap");
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @layer base {
-  html {
-    font-family: "Inter", sans-serif;
+  body {
+    font-family: "Poppins", sans-serif;
     font-size: 16px;
     color: rgb(0 0 0 / 0.72);
   }
@@ -15,7 +13,7 @@
 @layer components {
   .btn {
     @apply w-full flex justify-center 
-      py-3 px-4 border border-transparent text-sm font-medium 
+      py-3 px-4 border border-transparent text-sm font-semibold 
       rounded-md text-white bg-gray-900 hover:bg-gray-800 focus:outline-none 
       focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 disabled:opacity-75 disabled:cursor-not-allowed;
   }

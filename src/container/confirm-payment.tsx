@@ -1,16 +1,18 @@
 import { h } from "preact";
 import { IoIosCheckmarkCircle } from "@react-icons/all-files/io/IoIosCheckmarkCircle";
-import { useEffect, useState, useCallback } from "preact/hooks";
+import { FiFrown } from "@react-icons/all-files/fi/FiFrown";
+import { useEffect, useState, useCallback, useMemo } from "preact/hooks";
 import { useWeb3React } from "@web3-react/core";
 import { parseUnits } from "@ethersproject/units";
 import { useErc20, usePaymentContract } from "../hooks/web3";
 import { useConfig } from "../services/config";
 import { useRouter } from "../services/router";
-import { getToken } from "../services/web3/utils";
+import { getToken, getTokenAmount } from "../services/web3/utils";
 import { getBlockExplorer } from "../services/web3/constants";
 
 function ConfirmPayment({ selectedToken }: any) {
-  const [view, setView] = useState("checking-balance");
+  const [view, setView] = useState("processing-payment");
+  const [tokenAmount, setTokenAmount] = useState<string | null>(null);
 
   const [transaction, setTransaction] = useState<any>(null);
 
@@ -27,15 +29,35 @@ function ConfirmPayment({ selectedToken }: any) {
       const balance = await erc20.balanceOf(account);
 
       const hasEnoughBalance = balance.gte(parseUnits(amount || "0", token.decimals));
-      setView(hasEnoughBalance ? "confirm-payment" : "not-enough-balance");
+      if (!hasEnoughBalance) {
+        setView("not-enough-balance");
+      }
+
+      // side effect - fetch token amount
+      const tokenAmount = await getTokenAmount(selectedToken, chainId!, amount || "0");
+      setTokenAmount(tokenAmount);
     } catch (e) {
       setView("not-enough-balance");
     }
   }, [amount]);
 
+  const fetchTokenPrice = useCallback(async () => {
+    try {
+      const tokenAmount = await getTokenAmount(selectedToken, chainId!, amount || "0");
+      setTokenAmount(tokenAmount);
+
+      setView("confirm-payment");
+    } catch (e) {
+      setView("failed-price-fetch");
+    }
+  }, [amount]);
+
   useEffect(() => {
     checkBalance();
+    fetchTokenPrice();
   }, [selectedToken, amount]);
+
+  const token = useMemo(() => getToken(selectedToken, chainId!), [selectedToken, chainId]);
 
   const confirmPayment = async () => {
     try {
@@ -49,7 +71,7 @@ function ConfirmPayment({ selectedToken }: any) {
       setView("making-payment");
       // set timeout to update ui
 
-      const tx = await paymentContract.receivePayment(token.address, recipientAddress, parseUnits(amount!, token.decimals));
+      const tx = await paymentContract.makePayment(token.address, recipientAddress, parseUnits(amount!, token.decimals));
       await tx.wait();
 
       // set transaction in state
@@ -64,35 +86,50 @@ function ConfirmPayment({ selectedToken }: any) {
 
   const renderBody = () => {
     switch (view) {
-      case "checking-balance": {
+      case "processing-payment": {
         return (
           <div class="w-full flex flex-col items-center justify-center py-10">
             <div class="loader" />
-            <p class="text-sm mt-3">Checking balance...</p>
+            <p class="text-sm mt-3">Processing...</p>
+          </div>
+        );
+      }
+      case "failed-price-fetch": {
+        return (
+          <div class="w-full flex flex-col items-center justify-center py-8">
+            <FiFrown className="text-[3rem] mb-8 text-gray-300" />
+
+            <p class="text-sm text-gray-500 text-center mb-8">Can't get the price for this token</p>
+            <button class="btn" onClick={() => goBack()}>
+              Select another token
+            </button>
           </div>
         );
       }
       case "not-enough-balance": {
         return (
-          <div class="w-full flex flex-col items-center justify-center py-6">
-            <p class="text-sm text-center mb-5">Not enough balance to make this payment, try again with a different token</p>
+          <div class="w-full flex flex-col items-center justify-center py-8">
+            <FiFrown className="text-[3rem] mb-8 text-gray-300" />
+
+            <p class="text-sm text-gray-500 text-center mb-8">Not enough balance to make this transaction</p>
             <button class="btn" onClick={() => goBack()}>
-              Select different token
+              Select another token
             </button>
           </div>
         );
       }
       case "confirm-payment": {
         return (
-          <div class="w-full flex flex-col pt-2">
-            <p class="text-sm mb-1">You pay:</p>
+          <div class="w-full flex flex-col px-6 pt-2 text-center">
+            <p class="mb-2">You pay:</p>
 
             {/* TODO: Perform token price conversion */}
-            <h5 class="font-semibold text-xl mb-3">
-              {amount} {selectedToken.toUpperCase()}
+            <h5 class="flex items-center justify-center font-semibold text-2xl mb-4 pb-4 border-b border-dashed border-slate-300">
+              <img class="inline w-[25px] mr-2" src={token.icon} />
+              {tokenAmount || amount} {selectedToken.toUpperCase()}
             </h5>
 
-            <p class="text-sm text-gray-600 mb-5">You will receive 2 prompts from your wallet to approve and pay for this transaction.</p>
+            <p class="text-sm text-gray-500 my-10">Your wallet will prompt you twice to approve and pay for this transaction.</p>
 
             <button class="btn" onClick={() => confirmPayment()}>
               Confirm payment
@@ -107,8 +144,11 @@ function ConfirmPayment({ selectedToken }: any) {
 
             <div class="mt-5 text-center">
               <h5 class="font-bold text-xl">Hang Tight!</h5>
-              <p class="text-sm mt-3">
-                We're approving your wallet to spend {amount} {selectedToken.toUpperCase()}
+              <p class="text-sm mt-5 text-gray-500">
+                Approve the first transaction to spend{" "}
+                <span class="font-medium">
+                  {amount} {selectedToken.toUpperCase()}
+                </span>
               </p>
             </div>
           </div>
@@ -121,7 +161,7 @@ function ConfirmPayment({ selectedToken }: any) {
 
             <div class="mt-5 text-center">
               <h5 class="font-bold text-xl">Hang Tight!</h5>
-              <p class="text-sm mt-3">Making payment now...</p>
+              <p class="text-sm mt-5 text-gray-500">Making payment now...</p>
             </div>
           </div>
         );
@@ -131,8 +171,8 @@ function ConfirmPayment({ selectedToken }: any) {
           <div class="w-full flex flex-col items-center justify-center pt-10">
             <IoIosCheckmarkCircle className="text-5xl text-emerald-500" />
 
-            <div class="my-5 text-center">
-              <h5 class="font-semibold text-lg">Payment Successful!</h5>
+            <div class="my-8 text-center">
+              <h5 class="font-semibold text-lg mb-3">Payment Successful!</h5>
               <a class="text-sm underline" target="_blank" href={`${getBlockExplorer(chainId!)}tx/${transaction?.hash}`}>
                 View receipt
               </a>
@@ -149,7 +189,7 @@ function ConfirmPayment({ selectedToken }: any) {
     }
   };
 
-  return <div>{renderBody()}</div>;
+  return <main class="mb-auto flex flex-1 flex-col justify-center py-6 px-10">{renderBody()}</main>;
 }
 
 export default ConfirmPayment;
