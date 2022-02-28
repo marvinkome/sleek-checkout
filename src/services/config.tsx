@@ -1,11 +1,11 @@
 import { h, createContext } from "preact";
-import { useContext, useErrorBoundary } from "preact/hooks";
+import { useContext } from "preact/hooks";
 
 const ConfigContext = createContext<{
   amount?: string;
   recipientAddress?: string;
   onClose?: () => Promise<void>;
-  onSuccess?: (tx: any) => Promise<void>;
+  onSuccess?: (data: { tx: any; chainId: number; receipt: string }) => Promise<void>;
   onError?: (e: Error) => Promise<void>;
 }>({});
 
@@ -25,31 +25,17 @@ export function ConfigProvider({ config, ...props }: any) {
       // perform any cleanup here
       cleanup();
 
-      console.log(config.onClose);
       if (config.onClose) await config.onClose();
     },
 
     onError: async (e: Error) => {
-      // perform any cleanup here
-      cleanup();
-
-      if (config.onClose) await config.onClose();
       if (config.onError) await config.onError(e);
     },
 
-    onSuccess: async (tx: any) => {
-      // perform any cleanup here
-      cleanup();
-
-      if (config.onClose) await config.onClose();
-      if (config.onSuccess) await config.onSuccess(tx);
+    onSuccess: async (...args: any[]) => {
+      if (config.onSuccess) await config.onSuccess(...args);
     },
   };
 
-  const [error] = useErrorBoundary((e) => {
-    value.onError(e);
-  });
-
-  if (error) return null;
   return <ConfigContext.Provider value={value}>{props.children}</ConfigContext.Provider>;
 }

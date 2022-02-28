@@ -1,5 +1,6 @@
 import { h } from "preact";
 import clx from "classnames";
+import { FiFrown } from "@react-icons/all-files/fi/FiFrown";
 import { IoCloseOutline } from "@react-icons/all-files/io5/IoCloseOutline";
 import { IoMdLock } from "@react-icons/all-files/io/IoMdLock";
 import { useRouter } from "../services/router";
@@ -9,9 +10,9 @@ import { truncateAddress } from "../services/utils";
 // @ts-ignore
 import sleekLogo from "../assets/logo.svg";
 
-export const Layout = ({ children, maxPages }: any) => {
+export const Layout = ({ children, error, maxPages }: any) => {
   const { activeRouteId } = useRouter();
-  const { onClose, amount, recipientAddress } = useConfig();
+  const { onClose, onError, amount, recipientAddress } = useConfig();
 
   return (
     <div class="flex items-center justify-center fixed top-0 left-0 w-full h-full z-[599998] bg-[#000000b3]">
@@ -35,7 +36,26 @@ export const Layout = ({ children, maxPages }: any) => {
           </button>
         </header>
 
-        {children}
+        {error ? (
+          <main class="mb-auto flex flex-1 flex-col justify-center py-6 px-10">
+            <div class="w-full flex flex-col items-center justify-center py-8">
+              <FiFrown className="text-[3rem] mb-8 text-gray-300" />
+
+              <p class="text-sm text-gray-500 text-center mb-8">Something went wrong!</p>
+              <button
+                class="btn"
+                onClick={() => {
+                  onError!(error);
+                  onClose!();
+                }}
+              >
+                Close
+              </button>
+            </div>
+          </main>
+        ) : (
+          children
+        )}
 
         <footer class="mt-4 px-6 py-6 text-center">
           <div class="flex justify-center mb-4">

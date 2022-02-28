@@ -69,7 +69,6 @@ function ConfirmPayment({ selectedToken }: any) {
 
       // set state that approve contract is done
       setView("making-payment");
-      // set timeout to update ui
 
       const tx = await paymentContract.makePayment(token.address, recipientAddress, parseUnits(amount!, token.decimals));
       await tx.wait();
@@ -78,9 +77,12 @@ function ConfirmPayment({ selectedToken }: any) {
       // update ui to show receipt
       setView("payment-done");
       setTransaction(tx);
+
+      onSuccess!({ tx: transaction, chainId: chainId!, receipt: `${getBlockExplorer(chainId!)}tx/${transaction?.hash}` });
     } catch (err) {
       // show errors in UI
       onError && onError(err);
+      setView("payment-failed");
     }
   };
 
@@ -178,8 +180,25 @@ function ConfirmPayment({ selectedToken }: any) {
               </a>
             </div>
 
-            <button class="btn" onClick={() => onSuccess!(transaction)}>
+            <button
+              class="btn"
+              onClick={() =>
+                onSuccess!({ tx: transaction, chainId: chainId!, receipt: `${getBlockExplorer(chainId!)}tx/${transaction?.hash}` })
+              }
+            >
               Done
+            </button>
+          </div>
+        );
+      }
+      case "payment-failed": {
+        return (
+          <div class="w-full flex flex-col items-center justify-center py-8">
+            <FiFrown className="text-[3rem] mb-8 text-gray-300" />
+
+            <p class="text-sm text-gray-500 text-center mb-8">Something went wrong. Your tokens are safe.</p>
+            <button class="btn" onClick={() => setView("confirm-payment")}>
+              Try Again
             </button>
           </div>
         );
