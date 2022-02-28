@@ -80,7 +80,7 @@ function ConfirmPayment({ selectedToken, setPaymentData }: any) {
 
       setPaymentData({
         tx,
-        chainId: chainId!,
+        chainId: `${chainId!}`,
         token: token,
         receipt: `${getBlockExplorer(chainId!)}tx/${tx?.hash}`,
       });
