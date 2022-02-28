@@ -37,11 +37,10 @@ export default function SleekPay(options: any) {
     recipientAddress: options.recipientAddress,
     onError: options.onError,
     onSuccess: options.onSuccess,
-    onClose: (...args: any[]) => {
+    onClose: () => {
       style.unuse();
       targetElement.remove();
       linkNode.remove();
-      options.onClose && options.onClose(...args);
     },
   };
 

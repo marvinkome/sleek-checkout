@@ -12,7 +12,7 @@ import sleekLogo from "../assets/logo.svg";
 
 export const Layout = ({ children, error, maxPages }: any) => {
   const { activeRouteId } = useRouter();
-  const { onClose, onError, amount, recipientAddress } = useConfig();
+  const { onClose, amount, recipientAddress } = useConfig();
 
   return (
     <div class="flex items-center justify-center fixed top-0 left-0 w-full h-full z-[599998] bg-[#000000b3]">
@@ -42,13 +42,7 @@ export const Layout = ({ children, error, maxPages }: any) => {
               <FiFrown className="text-[3rem] mb-8 text-gray-300" />
 
               <p class="text-sm text-gray-500 text-center mb-8">Something went wrong!</p>
-              <button
-                class="btn"
-                onClick={() => {
-                  onError!(error);
-                  onClose!();
-                }}
-              >
+              <button class="btn" onClick={() => onClose!(error)}>
                 Close
               </button>
             </div>

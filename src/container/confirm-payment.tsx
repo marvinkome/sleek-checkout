@@ -10,7 +10,7 @@ import { useRouter } from "../services/router";
 import { getToken, getTokenAmount } from "../services/web3/utils";
 import { getBlockExplorer } from "../services/web3/constants";
 
-function ConfirmPayment({ selectedToken }: any) {
+function ConfirmPayment({ selectedToken, setPaymentData }: any) {
   const [view, setView] = useState("processing-payment");
   const [tokenAmount, setTokenAmount] = useState<string | null>(null);
 
@@ -18,7 +18,7 @@ function ConfirmPayment({ selectedToken }: any) {
 
   const { goBack } = useRouter();
   const { account, chainId } = useWeb3React();
-  const { amount, recipientAddress, onError, onSuccess, onClose } = useConfig();
+  const { amount, recipientAddress, onClose } = useConfig();
 
   const erc20 = useErc20(selectedToken);
   const paymentContract = usePaymentContract();
@@ -78,15 +78,14 @@ function ConfirmPayment({ selectedToken }: any) {
       setView("payment-done");
       setTransaction(tx);
 
-      onSuccess!({
-        tx: transaction,
+      setPaymentData({
+        tx,
         chainId: chainId!,
         token: token,
-        receipt: `${getBlockExplorer(chainId!)}tx/${transaction?.hash}`,
+        receipt: `${getBlockExplorer(chainId!)}tx/${tx?.hash}`,
       });
     } catch (err) {
-      // show errors in UI
-      onError && onError(err);
+      console.error(err);
       setView("payment-failed");
     }
   };
@@ -196,7 +195,7 @@ function ConfirmPayment({ selectedToken }: any) {
           <div class="w-full flex flex-col items-center justify-center py-8">
             <FiFrown className="text-[3rem] mb-8 text-gray-300" />
 
-            <p class="text-sm text-gray-500 text-center mb-8">Something went wrong. Your tokens are safe.</p>
+            <p class="text-sm text-gray-500 text-center mb-8">Transaction failed. Your tokens are safe.</p>
             <button class="btn" onClick={() => setView("confirm-payment")}>
               Try Again
             </button>

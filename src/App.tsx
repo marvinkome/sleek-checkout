@@ -16,11 +16,12 @@ import ConfirmPayment from "./container/confirm-payment";
 export const App = ({ root, ...config }: any) => {
   const [selectedToken, setSelectedToken] = useState(null);
   const [selectedNetwork, setSelectedNetwork] = useState(null);
+  const [paymentData, setPaymentData] = useState(null);
 
   const [error] = useErrorBoundary();
 
   return (
-    <ConfigProvider config={config}>
+    <ConfigProvider config={config} paymentData={paymentData}>
       <Web3ReactProvider getLibrary={getLibrary}>
         <RouterProvider initialRouteId={0}>
           <Web3ReactManager>
@@ -28,7 +29,7 @@ export const App = ({ root, ...config }: any) => {
               <Route routeId={0} component={<SelectNetwork selectedNetwork={selectedNetwork} setSelectedNetwork={setSelectedNetwork} />} />
               <Route routeId={1} component={<ConnectWallet chainId={selectedNetwork} />} />
               <Route routeId={2} component={<SelectToken selectedToken={selectedToken} setSelectedToken={setSelectedToken} />} />
-              <Route routeId={3} component={<ConfirmPayment selectedToken={selectedToken} />} />
+              <Route routeId={3} component={<ConfirmPayment selectedToken={selectedToken} setPaymentData={setPaymentData} />} />
             </Layout>
           </Web3ReactManager>
         </RouterProvider>
