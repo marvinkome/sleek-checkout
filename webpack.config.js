@@ -33,7 +33,7 @@ module.exports = (env) => {
 
       plugins: [
         new webpack.DefinePlugin({
-          __DEV__: process.env.NODE_ENV !== "production",
+          __DEV__: isDevBuild,
         }),
 
         new webpack.ProvidePlugin({
