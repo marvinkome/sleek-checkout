@@ -5,7 +5,7 @@ const ConfigContext = createContext<{
   amount?: string;
   recipientAddress?: string;
   onClose?: () => Promise<void>;
-  onSuccess?: (data: { tx: any; chainId: number; receipt: string }) => Promise<void>;
+  onSuccess?: (data: { tx: any; chainId: number; token: any; receipt: string }) => Promise<void>;
   onError?: (e: Error) => Promise<void>;
 }>({});
 

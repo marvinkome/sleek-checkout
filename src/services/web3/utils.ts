@@ -54,7 +54,10 @@ export function getToken(tokenName: string, chainId: number) {
     throw new Error("Token not yet implemented");
   }
 
-  return token;
+  return {
+    ...token,
+    name: tokenKey.toUpperCase(),
+  };
 }
 
 export async function getTokenAmount(tokenName: string, chainId: number, amount: string) {

@@ -18,7 +18,7 @@ function ConfirmPayment({ selectedToken }: any) {
 
   const { goBack } = useRouter();
   const { account, chainId } = useWeb3React();
-  const { amount, recipientAddress, onError, onSuccess } = useConfig();
+  const { amount, recipientAddress, onError, onSuccess, onClose } = useConfig();
 
   const erc20 = useErc20(selectedToken);
   const paymentContract = usePaymentContract();
@@ -78,7 +78,12 @@ function ConfirmPayment({ selectedToken }: any) {
       setView("payment-done");
       setTransaction(tx);
 
-      onSuccess!({ tx: transaction, chainId: chainId!, receipt: `${getBlockExplorer(chainId!)}tx/${transaction?.hash}` });
+      onSuccess!({
+        tx: transaction,
+        chainId: chainId!,
+        token: token,
+        receipt: `${getBlockExplorer(chainId!)}tx/${transaction?.hash}`,
+      });
     } catch (err) {
       // show errors in UI
       onError && onError(err);
@@ -180,12 +185,7 @@ function ConfirmPayment({ selectedToken }: any) {
               </a>
             </div>
 
-            <button
-              class="btn"
-              onClick={() =>
-                onSuccess!({ tx: transaction, chainId: chainId!, receipt: `${getBlockExplorer(chainId!)}tx/${transaction?.hash}` })
-              }
-            >
+            <button class="btn" onClick={() => onClose!()}>
               Done
             </button>
           </div>
