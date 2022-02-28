@@ -1,9 +1,9 @@
 {
   "private": true,
   "name": "sleek-checkout",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "license": "MIT",
-  "main": "/dist/sleek.min.js",
+  "main": "/dist/sleek.js",
   "scripts": {
     "build:wp": "webpack --config webpack.config.js --env=prod",
     "build": "rollup -c",
